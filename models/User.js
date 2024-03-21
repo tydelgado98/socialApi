@@ -4,8 +4,8 @@ const thoughtSchema = require('./Thought');
 // Schema to create Student model
 const userSchema = new Schema(
   {
-    first: String,
-    last: String,
+    username: { type: String, trim: true, required: true, index: { unique: true,} },
+    email: { type: String, required: true,validate: [validateEmail, 'Please fill a valid email address'], match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Use a valid email address'] , index:{ unique: true}  },
     age: Number,
     thoughts: [
       {
