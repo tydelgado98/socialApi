@@ -3,17 +3,22 @@ const { Schema, model } = require('mongoose');
 // Schema to create a course model
 const thoughtSchema = new Schema(
   {
-    thoughtName: {
+    thoughtText: {
       type: String,
       required: true,
+      minLength: 1,
+      maxLength: 280
     },
-    inPerson: {
-      type: Boolean,
-      default: true,
-    },
-    startDate: {
+    createdAt: {
       type: Date,
       default: Date.now(),
+      get: (Date) => {
+        if (Date) return Date.toIsoString("T")[0];
+      }
+    },
+    username: {
+      type: String,
+      require:true
     },
     endDate: {
       type: Date,
