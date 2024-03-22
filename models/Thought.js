@@ -25,10 +25,10 @@ const thoughtSchema = new Schema(
       // Sets a default value of 12 weeks from now
       default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
     },
-    users: [
+    reactions: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'Reaction',
       },
     ],
   },
@@ -39,6 +39,10 @@ const thoughtSchema = new Schema(
     id: false,
   }
 );
+
+thoughtSchema.virtual('reactionCount').get(function () {
+  return this.reactions.length;
+});
 
 const Thought = model('thought', thoughtSchema);
 

@@ -5,12 +5,25 @@ const thoughtSchema = require('./Thought');
 const userSchema = new Schema(
   {
     username: { type: String, trim: true, required: true, index: { unique: true,} },
-    email: { type: String, required: true,validate: [validateEmail, 'Please fill a valid email address'], match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Use a valid email address'] , index:{ unique: true}  },
+    email: { type: String, required: true, 
+      validate: {
+        validator: function (value) {
+          return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+        },
+        message: props => `${props.value} is not a valid email address!`
+      }
+    },
     age: Number,
     thoughts: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Thought',
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
       },
     ],
   },
@@ -23,6 +36,10 @@ const userSchema = new Schema(
     id: false,
   }
 );
+
+userSchema.virtual('friendCount').get(function () {
+  return this.friends.length;
+});
 
 const User = model('user', userSchema);
 

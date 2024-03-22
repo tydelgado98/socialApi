@@ -1,4 +1,4 @@
-const { Post, Thought } = require('../models');
+const { User, Thought } = require('../models');
 
 module.exports = {
   getThoughts(req, res) {
@@ -20,17 +20,17 @@ module.exports = {
   createThought(req, res) {
     Thought.create(req.body)
       .then((thought) => {
-        return Post.findOneAndUpdate(
-          { _id: req.body.postId },
+        return User.findOneAndUpdate(
+          { _id: req.body.userId },
           { $push: { thoughts: thought._id } },
           { new: true }
         );
       })
-      .then((post) =>
-        !post
+      .then((user) =>
+        !user
           ? res
               .status(404)
-              .json({ message: 'thought created, but no posts with this ID' })
+              .json({ message: 'thought created, but no users with this ID' })
           : res.json({ message: 'thought created' })
       )
       .catch((err) => {
